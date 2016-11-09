@@ -1,39 +1,26 @@
 package com.main.game;
 
-public abstract class Entity {
+/**
+ * A living unit that can move and has health points.
+ */
+public abstract class Entity extends GameObject {
 
-	protected double x, y;
+	protected double hp, maxHp;
 	protected double speed;
 
 	public Entity() {
-		this(0, 0, 0);
+		this(0, 0);
 	}
 
-	public Entity(double x, double y, double speed) {
-		this.x = x;
-		this.y = y;
+	public Entity(double maxHp, double speed) {
+		this(0, 0, maxHp, speed);
+	}
+
+	public Entity(double x, double y, double maxHp, double speed) {
+		super(x, y);
+		this.maxHp = maxHp;
+		this.hp = maxHp;
 		this.speed = speed;
-	}
-
-	public void setPosition(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
 	}
 
 	public double getSpeed() {
@@ -44,4 +31,19 @@ public abstract class Entity {
 		this.speed = speed;
 	}
 
+	public double getHp() {
+		return hp;
+	}
+
+	public void setHp(double hp) {
+		this.hp = hp;
+	}
+
+	public double getMaxHp() {
+		return maxHp;
+	}
+
+	public void setMaxHp(double maxHp) {
+		this.maxHp = maxHp;
+	}
 }
