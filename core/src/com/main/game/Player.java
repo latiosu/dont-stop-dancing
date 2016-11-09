@@ -1,45 +1,40 @@
 package com.main.game;
 
-public class Player {
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
-	protected double x, y;
-	protected double speed;
+public class Player extends Entity {
 
-	public Player() {
-		this(0, 0, 0);
+	private double maxHp, hp;
+	private Sprite sprite;
+
+	public Player(double maxHp, Sprite sprite) {
+		this.maxHp = maxHp;
+		this.hp = maxHp;
+		this.sprite = sprite;
 	}
 
-	public Player(double x, double y, double speed) {
-		this.x = x;
-		this.y = y;
-		this.speed = speed;
+	public double getMaxHp() {
+		return maxHp;
 	}
 
-	public void move() {
-		// TODO -- Make it work nicely with key events
+	public void setMaxHp(double maxHp) {
+		this.maxHp = maxHp;
 	}
 
-	public double getX() {
-		return x;
+	public double getHp() {
+		return hp;
 	}
 
-	public void setX(double x) {
-		this.x = x;
+	public void setHp(double hp) {
+		this.hp = hp;
 	}
 
-	public double getY() {
-		return y;
+	public Sprite getSprite() {
+		return sprite;
 	}
 
-	public void setY(double y) {
-		this.y = y;
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 
-	public double getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(double speed) {
-		this.speed = speed;
-	}
 }
