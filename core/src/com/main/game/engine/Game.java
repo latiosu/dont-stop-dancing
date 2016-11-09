@@ -2,30 +2,58 @@ package com.main.game.engine;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.main.game.objects.Block;
+import com.main.game.objects.Player;
+import com.main.game.structs.Level;
 
 public class Game extends ApplicationAdapter {
+
+	OrthographicCamera camera;
+	ShapeRenderer sr;
 	SpriteBatch batch;
-	
+	Level level;
+	Player player;
+
 	@Override
 	public void create () {
+		camera = new OrthographicCamera(Gdx.graphics.getWidth()/40f, Gdx.graphics.getHeight()/40f);
+		sr = new ShapeRenderer();
 		batch = new SpriteBatch();
+		level = new Level(Color.WHITE);
+		player = new Player(0, 0, 1.5f, 1.5f, 100, 100, 10, Color.RED);
 	}
 
 	@Override
 	public void render () {
+		camera.update();
+
 		Gdx.gl.glClearColor(1, 1, 1, 1); // Clear to white
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin(); // === Start drawing ===
 
 
+		sr.setProjectionMatrix(camera.combined);
 
-		batch.end(); // === End drawing ==
+		sr.begin(ShapeRenderer.ShapeType.Filled); // === Start shapes ===
+		sr.setColor(Color.ORANGE); // Ignore individual block colours
+		for (Block b : level.getBlocks()) {
+			sr.rect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+		}
+		sr.end(); // === End shapes ===
+
+		sr.begin(ShapeRenderer.ShapeType.Filled); // === Start player ===
+		sr.setColor(player.getColour());
+		sr.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+		sr.end(); // === End player ===
 	}
 	
 	@Override
 	public void dispose () {
+		sr.dispose();
 		batch.dispose();
 	}
 }

@@ -3,13 +3,13 @@ package com.main.game.objects;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Block extends GameObject {
+public class Block extends PhysicalObject {
 
 	protected Rectangle bounds;
 	protected Color colour;
 
 	public Block(float x, float y, float width, float height, Color colour) {
-		super(x, y);
+		super(x, y, width, height);
 		this.bounds = new Rectangle(x, y, width, height);
 		this.colour = colour;
 	}
