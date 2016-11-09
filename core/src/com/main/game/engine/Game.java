@@ -2,6 +2,7 @@ package com.main.game.engine;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,10 +27,17 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		level = new Level(Color.WHITE);
 		player = new Player(0, 0, 1.5f, 1.5f, 100, 100, 10, Color.RED);
+
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		// TODO -- Add UI input processor here
+		multiplexer.addProcessor(player.movementAdapter());
+		// TODO -- Add minigame input processor here
+		Gdx.input.setInputProcessor(multiplexer);
 	}
 
 	@Override
 	public void render () {
+		player.update();
 		camera.update();
 
 		Gdx.gl.glClearColor(1, 1, 1, 1); // Clear to white
