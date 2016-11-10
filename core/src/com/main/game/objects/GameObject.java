@@ -33,4 +33,8 @@ public abstract class GameObject {
 	public void setY(float y) {
 		this.y = y;
 	}
+
+	public String toString() {
+		return String.format("x: %.2f, y: %.2f", x, y);
+	}
 }

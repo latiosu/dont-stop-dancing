@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.main.game.objects.Block;
+import com.main.game.objects.Bullet;
 import com.main.game.objects.Player;
 import com.main.game.structs.Level;
 
@@ -22,12 +23,11 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		camera = new OrthographicCamera(Gdx.graphics.getWidth()/40f, Gdx.graphics.getHeight()/40f);
+		camera = new OrthographicCamera(Gdx.graphics.getWidth()/35f, Gdx.graphics.getHeight()/35f);
 		sr = new ShapeRenderer();
 		batch = new SpriteBatch();
 		level = new Level(Color.WHITE);
-		player = new Player(0, 0, 1.5f, 1.5f, 100, 100, 10, Color.RED);
-
+		player = new Player(0, 0, 1.5f, 1.5f, 100, 100, 10, null);
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		// TODO -- Add UI input processor here
 		multiplexer.addProcessor(player.movementAdapter());
@@ -43,20 +43,27 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 1, 1, 1); // Clear to white
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
 		sr.setProjectionMatrix(camera.combined);
 
-		sr.begin(ShapeRenderer.ShapeType.Filled); // === Start shapes ===
-		sr.setColor(Color.ORANGE); // Ignore individual block colours
+		sr.begin(ShapeRenderer.ShapeType.Filled); // === Shapes ===
+		sr.setColor(Color.ORANGE);
 		for (Block b : level.getBlocks()) {
-			sr.rect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+			sr.rect(b.getRenderX(), b.getRenderY(), b.getWidth(), b.getHeight());
 		}
-		sr.end(); // === End shapes ===
+		sr.end();
 
-		sr.begin(ShapeRenderer.ShapeType.Filled); // === Start player ===
-		sr.setColor(player.getColour());
-		sr.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-		sr.end(); // === End player ===
+		sr.begin(ShapeRenderer.ShapeType.Filled); // === Player ===
+		sr.setColor(Color.RED);
+		sr.rect(player.getRenderX(), player.getRenderY(), player.getWidth(), player.getHeight());
+		sr.end();
+
+		sr.begin(ShapeRenderer.ShapeType.Line); // === Bullets ===
+		sr.setColor(Color.RED);
+		for (Bullet b : player.getBullets()) {
+			b.update();
+			sr.circle(b.getRenderX(), b.getRenderY(), b.getWidth(), 10);
+		}
+		sr.end();
 	}
 	
 	@Override

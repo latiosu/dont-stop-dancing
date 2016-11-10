@@ -1,14 +1,15 @@
 package com.main.game.objects;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 public abstract class EntityObject extends PhysicalObject {
 
-	protected float hp, maxHp, speed;
+	protected float hp, maxHp;
 
-	public EntityObject(float x, float y, float width, float height, float hp, float maxHp, float speed) {
-		super(x, y, width, height);
+	public EntityObject(float x, float y, float width, float height, float hp, float maxHp, float speed, Sprite sprite) {
+		super(x, y, width, height, speed, sprite);
 		this.hp = hp;
 		this.maxHp = maxHp;
-		this.speed = speed;
 	}
 
 	public float getHp() {
@@ -27,11 +28,7 @@ public abstract class EntityObject extends PhysicalObject {
 		this.maxHp = maxHp;
 	}
 
-	public float getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
+	public String toString() {
+		return super.toString() + String.format(", hp: %.2f, maxHp: %.2f", hp, maxHp);
 	}
 }
