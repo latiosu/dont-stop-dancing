@@ -33,7 +33,6 @@ public class Player extends EntityObject {
 		Direction newDirection = computeDirection(moveDirections);
 		if (newDirection != null) {
 			this.direction = newDirection;
-			System.out.println(this.direction + " " + direction.getValue() + " " + direction.getAngle());
 			this.x += (float) (speed * Math.sin(direction.getAngle()) * Gdx.graphics.getDeltaTime());
 			this.y += (float) (speed * Math.cos(direction.getAngle()) * Gdx.graphics.getDeltaTime());
 		}
@@ -127,8 +126,6 @@ public class Player extends EntityObject {
 				return false;
 			}
 
-			System.out.println("Pressed " + keycode);
-
 			switch (keycode) {
 				case Input.Keys.UP:
 					moveDirections[0] = true;
@@ -165,8 +162,6 @@ public class Player extends EntityObject {
 			if (!isAcceptingInput) {
 				return false;
 			}
-
-			System.out.println("Released " + keycode);
 
 			switch (keycode) {
 				case Input.Keys.UP:
