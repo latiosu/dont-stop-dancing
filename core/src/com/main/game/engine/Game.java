@@ -26,7 +26,7 @@ public class Game extends ApplicationAdapter {
 		camera = new OrthographicCamera(Gdx.graphics.getWidth()/35f, Gdx.graphics.getHeight()/35f);
 		sr = new ShapeRenderer();
 		batch = new SpriteBatch();
-		level = new Level(Color.WHITE);
+		level = new Level(null);
 		player = new Player(0, 0, 1.5f, 1.5f, 100, 100, 10, null);
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		// TODO -- Add UI input processor here

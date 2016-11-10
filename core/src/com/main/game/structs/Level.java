@@ -1,6 +1,5 @@
 package com.main.game.structs;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.main.game.objects.Block;
 import com.main.game.objects.Spawner;
@@ -12,12 +11,12 @@ public class Level {
 
 	private List<Block> blocks;
 	private List<Spawner> spawners;
-	private Color bgColour;
+	private Texture texture;
 
-	public Level(Color bgColour) {
+	public Level(Texture texture) {
 		this.blocks = new ArrayList<>();
 		this.spawners = new ArrayList<>();
-		this.bgColour = bgColour;
+		this.texture = texture;
 	}
 
 	public List<Block> getBlocks() {
@@ -28,11 +27,7 @@ public class Level {
 		return spawners;
 	}
 
-	public Color getBgColour() {
-		return bgColour;
-	}
-
-	public void setBgColour(Color bgColour) {
-		this.bgColour = bgColour;
+	public Texture getTexture() {
+		return texture;
 	}
 }
