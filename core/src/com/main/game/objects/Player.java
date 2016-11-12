@@ -127,28 +127,28 @@ public class Player extends EntityObject {
 			}
 
 			switch (keycode) {
-				case Input.Keys.UP:
+				case Input.Keys.W:
 					moveDirections[0] = true;
 					break;
-				case Input.Keys.DOWN:
+				case Input.Keys.S:
 					moveDirections[1] = true;
 					break;
-				case Input.Keys.LEFT:
+				case Input.Keys.A:
 					moveDirections[2] = true;
 					break;
-				case Input.Keys.RIGHT:
+				case Input.Keys.D:
 					moveDirections[3] = true;
 					break;
-				case Input.Keys.W:
+				case Input.Keys.UP:
 					attackDirections[0] = true;
 					break;
-				case Input.Keys.S:
+				case Input.Keys.DOWN:
 					attackDirections[1] = true;
 					break;
-				case Input.Keys.A:
+				case Input.Keys.LEFT:
 					attackDirections[2] = true;
 					break;
-				case Input.Keys.D:
+				case Input.Keys.RIGHT:
 					attackDirections[3] = true;
 					break;
 				default:
@@ -164,28 +164,28 @@ public class Player extends EntityObject {
 			}
 
 			switch (keycode) {
-				case Input.Keys.UP:
+				case Input.Keys.W:
 					moveDirections[0] = false;
 					break;
-				case Input.Keys.DOWN:
+				case Input.Keys.S:
 					moveDirections[1] = false;
 					break;
-				case Input.Keys.LEFT:
+				case Input.Keys.A:
 					moveDirections[2] = false;
 					break;
-				case Input.Keys.RIGHT:
+				case Input.Keys.D:
 					moveDirections[3] = false;
 					break;
-				case Input.Keys.W:
+				case Input.Keys.UP:
 					attackDirections[0] = false;
 					break;
-				case Input.Keys.S:
+				case Input.Keys.DOWN:
 					attackDirections[1] = false;
 					break;
-				case Input.Keys.A:
+				case Input.Keys.LEFT:
 					attackDirections[2] = false;
 					break;
-				case Input.Keys.D:
+				case Input.Keys.RIGHT:
 					attackDirections[3] = false;
 					break;
 				default:
