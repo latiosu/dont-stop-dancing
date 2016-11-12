@@ -42,7 +42,7 @@ public class Player extends EntityObject {
 		Direction attackDirection = computeDirection(attackDirections);
 		if (attackDirection != null) { // Only fire if computed direction is different
 			if (lastAttackTime > 0.2f) {
-				bullets.add(new Bullet(position.x, position.y, 0.35f, 0.35f, 20f, null, attackDirection));
+				bullets.add(new Bullet(width / 2f, height / 2f, 0.30f, 0.30f, 20f, 20f, null, attackDirection));
 				lastAttackTime = 0f;
 			}
 		}

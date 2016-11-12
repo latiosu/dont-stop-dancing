@@ -8,66 +8,110 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.main.game.objects.Block;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.main.game.objects.Bullet;
-import com.main.game.objects.Player;
+import com.main.game.objects.Enemy;
 import com.main.game.structs.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends ApplicationAdapter {
 
+	public final static float UNIT_RATIO = 1/16f; // 1 unit = 16 px
+
+	OrthogonalTiledMapRenderer mapRenderer;
 	OrthographicCamera camera;
 	ShapeRenderer sr;
 	SpriteBatch batch;
 	Level level;
-	Player player;
+
+	boolean isPlaying;
+	float width, height;
 
 	@Override
 	public void create () {
-		camera = new OrthographicCamera(Gdx.graphics.getWidth()/35f, Gdx.graphics.getHeight()/35f);
+		// Load external files
+		level = Level.loadFromFile("core/assets/basic.tmx");
+
+		// Setup rendering tools
+		width = Gdx.graphics.getWidth();
+		height = Gdx.graphics.getHeight();
+		mapRenderer = new OrthogonalTiledMapRenderer(level.getMap(), UNIT_RATIO);
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 30, 30 * (height / width));
+//		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
+		camera.position.set(0, 0, 0);
+		camera.update();
 		sr = new ShapeRenderer();
+		sr.setProjectionMatrix(camera.combined);
+		mapRenderer.setView(camera);
 		batch = new SpriteBatch();
-		level = new Level(null);
-		player = new Player(0, 0, 1.5f, 1.5f, 100, 100, 10, null);
+
+		// Setup input handling
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		// TODO -- Add UI input processor here
-		multiplexer.addProcessor(player.movementAdapter());
+		multiplexer.addProcessor(level.getPlayer().movementAdapter());
 		// TODO -- Add minigame input processor here
 		Gdx.input.setInputProcessor(multiplexer);
+
+		// Start in-game
+		isPlaying = true;
 	}
 
 	@Override
 	public void render () {
-		player.update();
-		camera.update();
-
 		Gdx.gl.glClearColor(1, 1, 1, 1); // Clear to white
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		sr.setProjectionMatrix(camera.combined);
+		if (isPlaying) {
+			level.update();
 
-		sr.begin(ShapeRenderer.ShapeType.Filled); // === Shapes ===
-		sr.setColor(Color.ORANGE);
-		for (Block b : level.getBlocks()) {
-			sr.rect(b.getRenderX(), b.getRenderY(), b.getWidth(), b.getHeight());
+			// Track player with camera
+			camera.position.set(level.getPlayer().getPosition());
+			camera.update();
+			mapRenderer.setView(camera);
+
+			mapRenderer.render();
+
+			// === Bullets ===
+			sr.begin(ShapeRenderer.ShapeType.Line);
+			sr.setColor(Color.WHITE);
+			List<Bullet> toRemove = new ArrayList<>(level.getPlayer().getBullets().size());
+			for (Bullet b : level.getPlayer().getBullets()) {
+
+				b.update();
+
+				// Check if bullet needs to be cleaned up
+				if (b.isRemovable()) {
+					toRemove.add(b);
+				} else { // Else render
+					sr.circle(b.getX(), b.getY(), b.getWidth(), 10);
+				}
+			}
+			sr.end();
+			level.getPlayer().getBullets().removeAll(toRemove); // Clean up bullets
+
+			// === Player ===
+			sr.begin(ShapeRenderer.ShapeType.Filled);
+			sr.setColor(Color.BLACK);
+			sr.rect(0, 0, level.getPlayer().getWidth(), level.getPlayer().getHeight());
+			sr.end();
+
+			// === Enemies ===
+			sr.begin(ShapeRenderer.ShapeType.Filled);
+			sr.setColor(Color.ORANGE);
+			for (Enemy e : level.getEnemies()) {
+				e.update();
+				sr.circle(e.getRenderX(), e.getRenderY(), e.getWidth(), 10);
+			}
+			sr.end();
 		}
-		sr.end();
-
-		sr.begin(ShapeRenderer.ShapeType.Filled); // === Player ===
-		sr.setColor(Color.RED);
-		sr.rect(player.getRenderX(), player.getRenderY(), player.getWidth(), player.getHeight());
-		sr.end();
-
-		sr.begin(ShapeRenderer.ShapeType.Line); // === Bullets ===
-		sr.setColor(Color.RED);
-		for (Bullet b : player.getBullets()) {
-			b.update();
-			sr.circle(b.getRenderX(), b.getRenderY(), b.getWidth(), 10);
-		}
-		sr.end();
 	}
 	
 	@Override
 	public void dispose () {
+		mapRenderer.dispose();
 		sr.dispose();
 		batch.dispose();
 	}

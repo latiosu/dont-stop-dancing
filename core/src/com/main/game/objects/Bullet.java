@@ -3,13 +3,17 @@ package com.main.game.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 
 public class Bullet extends PhysicalObject {
 
-	protected float xVel, yVel;
+	protected Vector3 start;
+	protected float xVel, yVel, maxDistance;
 
-	public Bullet(float x, float y, float width, float height, float speed, Sprite sprite, Direction direction) {
+	public Bullet(float x, float y, float width, float height, float speed, float maxDistance, Sprite sprite, Direction direction) {
 		super(x, y, width, height, speed, sprite);
+		this.start = this.position.cpy();
+		this.maxDistance = maxDistance;
 
 		// Compute xVel and yVel
 		this.xVel = speed * MathUtils.sin(direction.getAngle());
@@ -22,5 +26,9 @@ public class Bullet extends PhysicalObject {
 	public void update() {
 		position.x += xVel * Gdx.graphics.getDeltaTime();
 		position.y += yVel * Gdx.graphics.getDeltaTime();
+	}
+
+	public boolean isRemovable() {
+		return Math.abs(start.dst(position)) >= maxDistance;
 	}
 }
