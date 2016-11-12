@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ public class Player extends EntityObject {
 		Direction newDirection = computeDirection(moveDirections);
 		if (newDirection != null) {
 			this.direction = newDirection;
-			this.x += (float) (speed * Math.sin(direction.getAngle()) * Gdx.graphics.getDeltaTime());
-			this.y += (float) (speed * Math.cos(direction.getAngle()) * Gdx.graphics.getDeltaTime());
+			this.x += speed * MathUtils.sin(direction.getAngle()) * Gdx.graphics.getDeltaTime();
+			this.y += speed * MathUtils.cos(direction.getAngle()) * Gdx.graphics.getDeltaTime();
 		}
 
 		// Fire projectile

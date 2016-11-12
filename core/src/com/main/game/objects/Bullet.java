@@ -2,6 +2,7 @@ package com.main.game.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Bullet extends PhysicalObject {
 
@@ -11,8 +12,8 @@ public class Bullet extends PhysicalObject {
 		super(x, y, width, height, speed, sprite);
 
 		// Compute xVel and yVel
-		this.xVel = (float)(speed * Math.sin(direction.getAngle()));
-		this.yVel = (float)(speed * Math.cos(direction.getAngle()));
+		this.xVel = speed * MathUtils.sin(direction.getAngle());
+		this.yVel = speed * MathUtils.cos(direction.getAngle());
 	}
 
 	/**
