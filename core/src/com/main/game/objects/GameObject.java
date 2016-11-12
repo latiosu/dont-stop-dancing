@@ -1,40 +1,48 @@
 package com.main.game.objects;
 
+import com.badlogic.gdx.math.Vector3;
+
 public abstract class GameObject {
 
-	protected float x, y;
+	protected Vector3 position;
 
 	public GameObject() {
 		this(0, 0);
 	}
 
 	public GameObject(float x, float y) {
-		this.x = x;
-		this.y = y;
+		position = new Vector3(x, y, 0);
 	}
 
 	public void setPosition(float x, float y) {
-		this.x = x;
-		this.y = y;
+		position.set(x, y, position.z);
 	}
 
 	public float getX() {
-		return x;
+		return position.x;
 	}
 
 	public void setX(float x) {
-		this.x = x;
+		position.set(x, position.y, position.z);
 	}
 
 	public float getY() {
-		return y;
+		return position.y;
 	}
 
 	public void setY(float y) {
-		this.y = y;
+		position.set(position.x, y, position.z);
+	}
+
+	public void translate(float x, float y) {
+		position.add(x, y, 0);
+	}
+
+	public Vector3 getPosition() {
+		return position;
 	}
 
 	public String toString() {
-		return String.format("x: %.2f, y: %.2f", x, y);
+		return String.format("position: %s", position);
 	}
 }

@@ -34,15 +34,15 @@ public class Player extends EntityObject {
 		Direction newDirection = computeDirection(moveDirections);
 		if (newDirection != null) {
 			this.direction = newDirection;
-			this.x += speed * MathUtils.sin(direction.getAngle()) * Gdx.graphics.getDeltaTime();
-			this.y += speed * MathUtils.cos(direction.getAngle()) * Gdx.graphics.getDeltaTime();
+			this.position.x += speed * MathUtils.sin(direction.getAngle()) * Gdx.graphics.getDeltaTime();
+			this.position.y += speed * MathUtils.cos(direction.getAngle()) * Gdx.graphics.getDeltaTime();
 		}
 
 		// Fire projectile
 		Direction attackDirection = computeDirection(attackDirections);
 		if (attackDirection != null) { // Only fire if computed direction is different
 			if (lastAttackTime > 0.2f) {
-				bullets.add(new Bullet(x, y, 0.35f, 0.35f, 20f, null, attackDirection));
+				bullets.add(new Bullet(position.x, position.y, 0.35f, 0.35f, 20f, null, attackDirection));
 				lastAttackTime = 0f;
 			}
 		}

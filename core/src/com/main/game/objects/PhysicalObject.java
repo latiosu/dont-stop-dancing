@@ -67,11 +67,11 @@ public abstract class PhysicalObject extends GameObject {
 	}
 
 	public float getRenderX() {
-		return x - width/2f;
+		return position.x - width/2f;
 	}
 
 	public float getRenderY() {
-		return y - height/2f;
+		return position.y - height/2f;
 	}
 
 	public Rectangle getBounds() {

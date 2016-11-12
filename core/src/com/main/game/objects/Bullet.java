@@ -20,7 +20,7 @@ public class Bullet extends PhysicalObject {
 	 * To be called each frame.
 	 */
 	public void update() {
-		x += xVel * Gdx.graphics.getDeltaTime();
-		y += yVel * Gdx.graphics.getDeltaTime();
+		position.x += xVel * Gdx.graphics.getDeltaTime();
+		position.y += yVel * Gdx.graphics.getDeltaTime();
 	}
 }
