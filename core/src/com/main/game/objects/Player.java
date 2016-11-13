@@ -5,6 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.main.game.engine.WorldManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +18,7 @@ import java.util.List;
 public class Player extends EntityObject {
 
 	private List<Bullet> bullets;
+	private Body body;
 	private float lastAttackTime;
 	private boolean[] moveDirections; // [Up, Down, Left, Right]
 	private boolean[] attackDirections; // [Up, Down, Left, Right]
@@ -24,6 +31,23 @@ public class Player extends EntityObject {
 		this.moveDirections = new boolean[4];
 		this.attackDirections = new boolean[4];
 		this.isAcceptingInput = true;
+
+		// Register as Box2D rigid body
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(position.x + width/2f, position.y + height/2f);
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.fixedRotation = true;
+		bodyDef.linearDamping = 10f;
+		body = WorldManager.getWorld().createBody(bodyDef);
+		PolygonShape polygon = new PolygonShape();
+		polygon.setAsBox(width/2f, height/2f);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = polygon;
+		fixtureDef.density = 1f; // 20 Kg/m^2
+		fixtureDef.friction = 0.4f;
+		fixtureDef.restitution = 0.0f;
+		body.createFixture(fixtureDef);
+		polygon.dispose();
 	}
 
 	/**
@@ -34,9 +58,17 @@ public class Player extends EntityObject {
 		Direction newDirection = computeDirection(moveDirections);
 		if (newDirection != null) {
 			this.direction = newDirection;
-			this.position.x += speed * MathUtils.sin(direction.getAngle()) * Gdx.graphics.getDeltaTime();
-			this.position.y += speed * MathUtils.cos(direction.getAngle()) * Gdx.graphics.getDeltaTime();
+
+			float impulseX = MathUtils.sin(direction.getAngle()) * speed * Gdx.graphics.getDeltaTime();
+			float impulseY = MathUtils.cos(direction.getAngle()) * speed * Gdx.graphics.getDeltaTime();
+
+			body.applyLinearImpulse(impulseX,
+					impulseY,
+					position.x + width/2f,
+					position.y + height/2f,
+					true);
 		}
+		position = new Vector3(body.getPosition().cpy().sub(width/2f, height/2f), 0);
 
 		// Fire projectile
 		Direction attackDirection = computeDirection(attackDirections);

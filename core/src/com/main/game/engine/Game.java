@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.main.game.objects.Bullet;
 import com.main.game.objects.Enemy;
 import com.main.game.structs.Level;
@@ -20,17 +23,22 @@ public class Game extends ApplicationAdapter {
 
 	public final static float UNIT_RATIO = 1/16f; // 1 unit = 16 px
 
+	Box2DDebugRenderer debugRenderer;
 	OrthogonalTiledMapRenderer mapRenderer;
 	OrthographicCamera camera;
 	ShapeRenderer sr;
 	SpriteBatch batch;
 	Level level;
 
+	int[] foregroundLayers, backgroundLayers;
+
 	boolean isPlaying;
 	float width, height;
 
 	@Override
 	public void create () {
+		Box2D.init();
+
 		// Load external files
 		level = Level.loadFromFile("core/assets/basic.tmx");
 
@@ -40,7 +48,6 @@ public class Game extends ApplicationAdapter {
 		mapRenderer = new OrthogonalTiledMapRenderer(level.getMap(), UNIT_RATIO);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 30, 30 * (height / width));
-//		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.position.set(0, 0, 0);
 		camera.update();
 		sr = new ShapeRenderer();
@@ -94,7 +101,7 @@ public class Game extends ApplicationAdapter {
 
 			// === Player ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
-			sr.setColor(Color.BLACK);
+			sr.setColor(Color.WHITE);
 			sr.rect(0, 0, level.getPlayer().getWidth(), level.getPlayer().getHeight());
 			sr.end();
 
@@ -106,6 +113,11 @@ public class Game extends ApplicationAdapter {
 				sr.circle(e.getRenderX(), e.getRenderY(), e.getWidth(), 10);
 			}
 			sr.end();
+
+			// === Box2D ===
+			WorldManager.getDebugRenderer().render(WorldManager.getWorld(), camera.combined);
+			WorldManager.doPhysicsStep();
+
 		}
 	}
 	
