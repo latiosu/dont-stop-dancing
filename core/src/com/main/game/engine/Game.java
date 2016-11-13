@@ -55,6 +55,10 @@ public class Game extends ApplicationAdapter {
 		mapRenderer.setView(camera);
 		batch = new SpriteBatch();
 
+		// Rendering layers
+		backgroundLayers = new int[]{0, 1, 2, 3, 4};
+		foregroundLayers = new int[]{5};
+
 		// Setup input handling
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		// TODO -- Add UI input processor here
@@ -79,7 +83,7 @@ public class Game extends ApplicationAdapter {
 			camera.update();
 			mapRenderer.setView(camera);
 
-			mapRenderer.render();
+			mapRenderer.render(backgroundLayers);
 
 			// === Bullets ===
 			sr.begin(ShapeRenderer.ShapeType.Line);
@@ -113,6 +117,8 @@ public class Game extends ApplicationAdapter {
 				sr.circle(e.getRenderX(), e.getRenderY(), e.getWidth(), 10);
 			}
 			sr.end();
+
+			mapRenderer.render(foregroundLayers);
 
 			// === Box2D ===
 			WorldManager.getDebugRenderer().render(WorldManager.getWorld(), camera.combined);
