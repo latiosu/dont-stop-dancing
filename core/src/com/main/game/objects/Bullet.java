@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
+import com.main.game.engine.WorldManager;
 
 public class Bullet extends PhysicalObject {
 
@@ -18,17 +20,32 @@ public class Bullet extends PhysicalObject {
 		// Compute xVel and yVel
 		this.xVel = speed * MathUtils.sin(direction.getAngle());
 		this.yVel = speed * MathUtils.cos(direction.getAngle());
-	}
 
-	/**
-	 * To be called each frame.
-	 */
-	public void update() {
-		position.x += xVel * Gdx.graphics.getDeltaTime();
-		position.y += yVel * Gdx.graphics.getDeltaTime();
-	}
+		// Register as Box2D rigid body
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(position.x + width/2f, position.y + height/2f);
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.bullet = true;
+		bodyDef.fixedRotation = true;
 
-	public boolean isRemovable() {
-		return Math.abs(start.dst(position)) >= maxDistance;
+		body = WorldManager.getWorld().createBody(bodyDef);
+		body.setUserData(this);
+
+		CircleShape shape = new CircleShape();
+		shape.setRadius(width/2f);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 0.5f;
+		fixtureDef.friction = 0.5f;
+		fixtureDef.restitution = 0.2f;
+		fixtureDef.isSensor = true;
+
+
+		body.createFixture(fixtureDef);
+		shape.dispose();
+
+		// Start moving bullet
+		body.applyLinearImpulse(xVel * Gdx.graphics.getDeltaTime(), yVel * Gdx.graphics.getDeltaTime(), width/2f, height/2f, true);
 	}
 }

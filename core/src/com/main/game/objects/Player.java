@@ -18,7 +18,6 @@ import java.util.List;
 public class Player extends EntityObject {
 
 	private List<Bullet> bullets;
-	private Body body;
 	private float lastAttackTime;
 	private boolean[] moveDirections; // [Up, Down, Left, Right]
 	private boolean[] attackDirections; // [Up, Down, Left, Right]
@@ -38,14 +37,19 @@ public class Player extends EntityObject {
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.fixedRotation = true;
 		bodyDef.linearDamping = 10f;
+
 		body = WorldManager.getWorld().createBody(bodyDef);
+		body.setUserData(this);
+
 		PolygonShape polygon = new PolygonShape();
 		polygon.setAsBox(width/2f, height/2f);
+
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 1f; // 20 Kg/m^2
 		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0.0f;
+
 		body.createFixture(fixtureDef);
 		polygon.dispose();
 	}
@@ -74,11 +78,15 @@ public class Player extends EntityObject {
 		Direction attackDirection = computeDirection(attackDirections);
 		if (attackDirection != null) { // Only fire if computed direction is different
 			if (lastAttackTime > 0.2f) {
-				bullets.add(new Bullet(width / 2f, height / 2f, 0.30f, 0.30f, 20f, 20f, null, attackDirection));
+				bullets.add(new Bullet(position.x + width/2f, position.y + height/2f, 0.30f, 0.30f, 20f, 20f, null, attackDirection));
 				lastAttackTime = 0f;
 			}
 		}
 		lastAttackTime += Gdx.graphics.getDeltaTime();
+
+	}
+
+	public void cleanUp() {
 	}
 
 	public List<Bullet> getBullets() {

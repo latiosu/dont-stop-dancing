@@ -23,7 +23,6 @@ public class Game extends ApplicationAdapter {
 
 	public final static float UNIT_RATIO = 1/16f; // 1 unit = 16 px
 
-	Box2DDebugRenderer debugRenderer;
 	OrthogonalTiledMapRenderer mapRenderer;
 	OrthographicCamera camera;
 	ShapeRenderer sr;
@@ -86,19 +85,13 @@ public class Game extends ApplicationAdapter {
 			mapRenderer.render(backgroundLayers);
 
 			// === Bullets ===
-			sr.begin(ShapeRenderer.ShapeType.Line);
-			sr.setColor(Color.WHITE);
+			sr.begin(ShapeRenderer.ShapeType.Filled);
+			sr.setColor(Color.ORANGE);
 			List<Bullet> toRemove = new ArrayList<>(level.getPlayer().getBullets().size());
 			for (Bullet b : level.getPlayer().getBullets()) {
 
-				b.update();
+//				b.update();
 
-				// Check if bullet needs to be cleaned up
-				if (b.isRemovable()) {
-					toRemove.add(b);
-				} else { // Else render
-					sr.circle(b.getX(), b.getY(), b.getWidth(), 10);
-				}
 			}
 			sr.end();
 			level.getPlayer().getBullets().removeAll(toRemove); // Clean up bullets
@@ -123,7 +116,6 @@ public class Game extends ApplicationAdapter {
 			// === Box2D ===
 			WorldManager.getDebugRenderer().render(WorldManager.getWorld(), camera.combined);
 			WorldManager.doPhysicsStep();
-
 		}
 	}
 	
@@ -132,5 +124,6 @@ public class Game extends ApplicationAdapter {
 		mapRenderer.dispose();
 		sr.dispose();
 		batch.dispose();
+		WorldManager.getWorld().dispose();
 	}
 }

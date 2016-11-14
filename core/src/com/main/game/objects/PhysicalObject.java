@@ -2,6 +2,7 @@ package com.main.game.objects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
 
 /**
  * A living unit that has a size, position and health points.
@@ -31,6 +32,7 @@ public abstract class PhysicalObject extends GameObject {
 
 	protected Direction direction;
 	protected Sprite sprite;
+	protected Body body;
 	protected float width, height, speed;
 
 	public PhysicalObject(float x, float y, float width, float height, float speed, Sprite sprite) {
@@ -39,6 +41,7 @@ public abstract class PhysicalObject extends GameObject {
 
 	public PhysicalObject(float x, float y, float width, float height, float speed, Sprite sprite, Direction direction) {
 		super(x, y);
+		this.body = null;
 		this.width = width;
 		this.height = height;
 		this.speed = speed;

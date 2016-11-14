@@ -11,7 +11,10 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.main.game.engine.Game;
 import com.main.game.engine.WorldManager;
 import com.main.game.objects.Enemy;
@@ -23,12 +26,12 @@ import java.util.List;
 
 public class Level {
 
+	private static List<Body> colliders;
 	private int width, height;
 	private Player player;
 	private List<Spawner> spawners;
 	private List<Enemy> enemies;
 	private TiledMap map;
-	private static List<Body> colliders;
 
 	private Level(String levelName) {
 		this.spawners = new ArrayList<>();
@@ -56,6 +59,7 @@ public class Level {
 						bodyDef.position.set(polyline.getX() * Game.UNIT_RATIO, polyline.getY() * Game.UNIT_RATIO);
 
 						Body body = WorldManager.getWorld().createBody(bodyDef);
+						body.setUserData("Wall");
 
 						PolygonShape polygon = new PolygonShape();
 						float[] scaled = new float[polyline.getVertices().length];
@@ -78,10 +82,11 @@ public class Level {
 						BodyDef bodyDef = new BodyDef();
 						bodyDef.type = BodyDef.BodyType.StaticBody;
 						Vector2 position = rect.getPosition(Vector2.Zero);
-						position.add(rect.width/2f, rect.height/2f).scl(Game.UNIT_RATIO);
+						position.add(rect.width / 2f, rect.height / 2f).scl(Game.UNIT_RATIO);
 						bodyDef.position.set(position);
 
 						Body body = WorldManager.getWorld().createBody(bodyDef);
+						body.setUserData("Wall");
 
 						PolygonShape polygon = new PolygonShape();
 						polygon.setAsBox(rect.width / 2f * Game.UNIT_RATIO, rect.height / 2f * Game.UNIT_RATIO);
@@ -101,6 +106,7 @@ public class Level {
 						bodyDef.position.set(polygon.getX() * Game.UNIT_RATIO, polygon.getY() * Game.UNIT_RATIO);
 
 						Body body = WorldManager.getWorld().createBody(bodyDef);
+						body.setUserData("Wall");
 
 						PolygonShape shape = new PolygonShape();
 						float[] scaled = new float[polygon.getVertices().length];
