@@ -87,27 +87,23 @@ public class Game extends ApplicationAdapter {
 			// === Bullets ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
 			sr.setColor(Color.ORANGE);
-			List<Bullet> toRemove = new ArrayList<>(level.getPlayer().getBullets().size());
 			for (Bullet b : level.getPlayer().getBullets()) {
-
-//				b.update();
-
+				// TODO -- Render bullet sprite
 			}
 			sr.end();
-			level.getPlayer().getBullets().removeAll(toRemove); // Clean up bullets
 
 			// === Player ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
 			sr.setColor(Color.WHITE);
 			sr.rect(0, 0, level.getPlayer().getWidth(), level.getPlayer().getHeight());
+			// TODO -- Render player sprite
 			sr.end();
 
 			// === Enemies ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
 			sr.setColor(Color.ORANGE);
 			for (Enemy e : level.getEnemies()) {
-				e.update();
-				sr.circle(e.getRenderX(), e.getRenderY(), e.getWidth(), 10);
+				// TODO -- Render enemy sprite
 			}
 			sr.end();
 

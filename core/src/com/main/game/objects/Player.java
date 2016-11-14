@@ -46,7 +46,7 @@ public class Player extends EntityObject {
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
-		fixtureDef.density = 1f; // 20 Kg/m^2
+		fixtureDef.density = 1f;
 		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0.0f;
 
@@ -77,16 +77,12 @@ public class Player extends EntityObject {
 		// Fire projectile
 		Direction attackDirection = computeDirection(attackDirections);
 		if (attackDirection != null) { // Only fire if computed direction is different
-			if (lastAttackTime > 0.2f) {
-				bullets.add(new Bullet(position.x + width/2f, position.y + height/2f, 0.30f, 0.30f, 20f, 20f, null, attackDirection));
+			if (lastAttackTime > 0.1f) {
+				bullets.add(new Bullet(position.x + width/2f, position.y + height/2f, 0.3f, 0.3f, 30f, 25f, null, attackDirection));
 				lastAttackTime = 0f;
 			}
 		}
 		lastAttackTime += Gdx.graphics.getDeltaTime();
-
-	}
-
-	public void cleanUp() {
 	}
 
 	public List<Bullet> getBullets() {

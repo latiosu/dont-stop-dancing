@@ -24,6 +24,7 @@ public class WorldManager {
 		if (world == null) {
 			world = new World(new Vector2(0, 0), true);
 			world.setContactListener(new CollisionListener());
+			toRemove = new HashSet<>();
 		}
 		return world;
 	}
@@ -36,7 +37,6 @@ public class WorldManager {
 	}
 
 	public static void doPhysicsStep() {
-		toRemove = new HashSet<>();
 		// Fixed time step
 		// Max frame time to avoid spiral of death (on slow devices)
 		float frameTime = Math.min(Gdx.graphics.getDeltaTime(), 0.25f);
@@ -52,6 +52,11 @@ public class WorldManager {
 		for (Body b : toRemove) {
 			world.destroyBody(b);
 		}
+		toRemove.clear();
+	}
+
+	public static Set<Body> getToRemove() {
+		return toRemove;
 	}
 
 	public static class CollisionListener implements ContactListener {
@@ -65,23 +70,21 @@ public class WorldManager {
 					// Destroy bullet
 					toRemove.add(contact.getFixtureA().getBody());
 
-					// TODO -- Damage enemy
-
+					Enemy e = (Enemy) dataB;
+					e.setHp(0f);
 				} else if (dataB instanceof String && dataB.equals("Wall")) { // Bullet - Wall
-
 					// Destroy bullet
 					toRemove.add(contact.getFixtureA().getBody());
 				}
 			} else if (dataA instanceof Enemy) {
 				if (dataB instanceof Bullet) { // Enemy - Bullet
 					// Destroy bullet
-					toRemove.add(contact.getFixtureA().getBody());
+					toRemove.add(contact.getFixtureB().getBody());
 
-					// TODO -- Damage enemy
-
+					Enemy e = (Enemy) dataA;
+					e.setHp(0f);
 				} else if (dataB instanceof Player) { // Enemy - Player
 					// TODO -- Trigger minigame
-
 				}
 			} else if (dataA instanceof String && dataA.equals("Wall")) {
 
@@ -94,7 +97,6 @@ public class WorldManager {
 			} else if (dataA instanceof Player) {
 				if (dataB instanceof Enemy) { // Player - Enemy
 					// TODO -- Trigger minigame
-
 				} else if (dataB instanceof String && dataB.equals("Wall")) { // Player - Wall
 					// TODO -- Trigger SFX
 				}

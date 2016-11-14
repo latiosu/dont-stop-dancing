@@ -49,6 +49,10 @@ public abstract class PhysicalObject extends GameObject {
 		this.direction = direction;
 	}
 
+	public Body getBody() {
+		return body;
+	}
+
 	public float getWidth() {
 		return width;
 	}

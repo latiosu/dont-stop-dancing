@@ -26,25 +26,41 @@ import java.util.List;
 
 public class Level {
 
-	private static List<Body> colliders;
 	private int width, height;
 	private Player player;
 	private List<Spawner> spawners;
 	private List<Enemy> enemies;
+	private List<Enemy> toRemove;
 	private TiledMap map;
 
 	private Level(String levelName) {
 		this.spawners = new ArrayList<>();
 		this.enemies = new ArrayList<>();
+		this.toRemove = new ArrayList<>();
 		this.map = new TmxMapLoader().load(levelName); // From internal file storage
 		this.width = map.getProperties().get("width", Integer.class);
 		this.height = map.getProperties().get("height", Integer.class);
-		Level.colliders = new ArrayList<>();
 		setupMapObjects();
 	}
 
 	public void update() {
+		// Player
 		player.update();
+
+		// Spawners
+		for (Spawner s : spawners) {
+			s.update();
+		}
+
+		// Enemies
+		for (Enemy e : enemies) {
+			e.update();
+			if (!e.isAlive()) {
+				toRemove.add(e);
+			}
+		}
+		enemies.removeAll(toRemove);
+		toRemove.clear();
 	}
 
 	private void setupMapObjects() {
@@ -75,7 +91,6 @@ public class Level {
 
 						body.createFixture(fixtureDef);
 						polygon.dispose();
-						colliders.add(body);
 					} else if (mo instanceof RectangleMapObject) {
 						Rectangle rect = ((RectangleMapObject) mo).getRectangle();
 
@@ -97,7 +112,6 @@ public class Level {
 
 						body.createFixture(fixtureDef);
 						polygon.dispose();
-						colliders.add(body);
 					} else if (mo instanceof PolygonMapObject) {
 						Polygon polygon = ((PolygonMapObject) mo).getPolygon();
 
@@ -122,7 +136,6 @@ public class Level {
 
 						body.createFixture(fixtureDef);
 						shape.dispose();
-						colliders.add(body);
 					}
 				}
 			} else if (l.getName().equals("Spawners")) {
@@ -130,7 +143,7 @@ public class Level {
 					String type = mo.getProperties().get("type", String.class);
 
 					if (type.equals("Spawner")) { // Generate spawner objects
-						spawners.add(new Spawner(mo));
+						spawners.add(new Spawner(mo, this));
 					} else if (mo.getName().equals("Player Spawn")) { // Create player at spawn location
 						player = new Player(mo.getProperties().get("x", Float.class) * Game.UNIT_RATIO,
 								mo.getProperties().get("y", Float.class) * Game.UNIT_RATIO,
@@ -166,15 +179,11 @@ public class Level {
 		return spawners;
 	}
 
-	public List<Enemy> getEnemies() {
-		return enemies;
-	}
-
 	public TiledMap getMap() {
 		return map;
 	}
 
-	public static List<Body> getColliders() {
-		return colliders;
+	public List<Enemy> getEnemies() {
+		return enemies;
 	}
 }
