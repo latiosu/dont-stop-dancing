@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.main.game.objects.Bullet;
 import com.main.game.objects.Enemy;
+import com.main.game.objects.Player;
 import com.main.game.structs.Level;
 
 public class Game extends ApplicationAdapter {
@@ -73,7 +74,8 @@ public class Game extends ApplicationAdapter {
 			level.update();
 
 			// Track player
-			camera.position.set(level.getPlayer().getPosition());
+			Player player = level.getPlayer();
+			camera.position.set(player.getPosition());
 
 			// Adjust to map bounds
 			if (camera.position.x < camera.viewportWidth / 2f) {
@@ -103,8 +105,24 @@ public class Game extends ApplicationAdapter {
 			// === Player ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
 			sr.setColor(Color.WHITE);
+
+			// Render sprite only as camera is fixed
+			float correctX = 0;
+			float correctY = 0;
+			if (camera.position.x <= camera.viewportWidth / 2f) {
+				correctX = player.getX() - camera.viewportWidth / 2f;
+			} else if (camera.position.x >= level.getWidth() - camera.viewportWidth / 2f) {
+				correctX = player.getX() - (level.getWidth() - camera.viewportWidth / 2f);
+			}
+			if (camera.position.y <= camera.viewportHeight / 2f) {
+				correctY = player.getY() - camera.viewportHeight / 2f;
+			} else if (camera.position.y >= level.getHeight() - camera.viewportHeight / 2f) {
+				correctY = player.getY() - (level.getHeight() - camera.viewportHeight / 2f);
+			}
+			sr.rect(correctX, correctY, player.getWidth(), player.getHeight());
 			// TODO -- Render player sprite
 			sr.end();
+
 
 			// === Enemies ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
@@ -112,7 +130,6 @@ public class Game extends ApplicationAdapter {
 			for (Enemy e : level.getEnemies()) {
 				// TODO -- Render enemy sprite
 			}
-			sr.end();
 
 			mapRenderer.render(foregroundLayers);
 
