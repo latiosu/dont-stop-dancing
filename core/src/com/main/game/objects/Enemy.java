@@ -48,5 +48,6 @@ public class Enemy extends EntityObject {
 		Vector2 targetDirection = new Vector2(dirX, dirY).nor().scl(speed);
 
 		body.setLinearVelocity(targetDirection);
+		position.set(body.getPosition(), 0);
 	}
 }

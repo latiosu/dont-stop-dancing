@@ -128,8 +128,9 @@ public class Game extends ApplicationAdapter {
 			sr.begin(ShapeRenderer.ShapeType.Filled);
 			sr.setColor(Color.ORANGE);
 			for (Enemy e : level.getEnemies()) {
-				// TODO -- Render enemy sprite
+				sr.circle(e.getX() - player.getX() + correctX, e.getY() - player.getY() + correctY, e.getWidth()/2f, 20);
 			}
+			sr.end();
 
 			mapRenderer.render(foregroundLayers);
 
