@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.main.game.engine.WorldManager;
 
 public class Bullet extends PhysicalObject {
@@ -23,7 +25,7 @@ public class Bullet extends PhysicalObject {
 
 		// Register as Box2D rigid body
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.position.set(position.x + width/2f, position.y + height/2f);
+		bodyDef.position.set(position.x + width / 2f, position.y + height / 2f);
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.bullet = true;
 		bodyDef.fixedRotation = true;
@@ -32,7 +34,7 @@ public class Bullet extends PhysicalObject {
 		body.setUserData(this);
 
 		CircleShape shape = new CircleShape();
-		shape.setRadius(width/2f);
+		shape.setRadius(width / 2f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
@@ -46,6 +48,6 @@ public class Bullet extends PhysicalObject {
 		shape.dispose();
 
 		// Start moving bullet
-		body.applyLinearImpulse(xVel * Gdx.graphics.getDeltaTime(), yVel * Gdx.graphics.getDeltaTime(), width/2f, height/2f, true);
+		body.applyLinearImpulse(xVel * Gdx.graphics.getDeltaTime(), yVel * Gdx.graphics.getDeltaTime(), width / 2f, height / 2f, true);
 	}
 }

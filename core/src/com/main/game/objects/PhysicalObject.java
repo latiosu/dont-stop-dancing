@@ -2,6 +2,7 @@ package com.main.game.objects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
@@ -61,6 +62,10 @@ public abstract class PhysicalObject extends GameObject {
 		return height;
 	}
 
+	public Vector2 getDimensions() {
+		return new Vector2(width, height);
+	}
+
 	public float getSpeed() {
 		return speed;
 	}
@@ -74,11 +79,11 @@ public abstract class PhysicalObject extends GameObject {
 	}
 
 	public float getRenderX() {
-		return position.x - width/2f;
+		return position.x - width / 2f;
 	}
 
 	public float getRenderY() {
-		return position.y - height/2f;
+		return position.y - height / 2f;
 	}
 
 	public Rectangle getBounds() {

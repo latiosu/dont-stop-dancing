@@ -10,18 +10,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.main.game.objects.Bullet;
 import com.main.game.objects.Enemy;
 import com.main.game.structs.Level;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Game extends ApplicationAdapter {
 
-	public final static float UNIT_RATIO = 1/16f; // 1 unit = 16 px
+	public final static float UNIT_RATIO = 1 / 16f; // 1 unit = 16 px
 
 	OrthogonalTiledMapRenderer mapRenderer;
 	OrthographicCamera camera;
@@ -35,7 +30,7 @@ public class Game extends ApplicationAdapter {
 	float width, height;
 
 	@Override
-	public void create () {
+	public void create() {
 		Box2D.init();
 
 		// Load external files
@@ -70,15 +65,28 @@ public class Game extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		Gdx.gl.glClearColor(1, 1, 1, 1); // Clear to white
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (isPlaying) {
 			level.update();
 
-			// Track player with camera
+			// Track player
 			camera.position.set(level.getPlayer().getPosition());
+
+			// Adjust to map bounds
+			if (camera.position.x < camera.viewportWidth / 2f) {
+				camera.position.x = camera.viewportWidth / 2f;
+			} else if (camera.position.x > level.getWidth() - camera.viewportWidth / 2f) {
+				camera.position.x = level.getWidth() - camera.viewportWidth / 2f;
+			}
+			if (camera.position.y < camera.viewportHeight / 2f) {
+				camera.position.y = camera.viewportHeight / 2f;
+			} else if (camera.position.y > level.getHeight() - camera.viewportHeight / 2f) {
+				camera.position.y = level.getHeight() - camera.viewportHeight / 2f;
+			}
+
 			camera.update();
 			mapRenderer.setView(camera);
 
@@ -95,7 +103,6 @@ public class Game extends ApplicationAdapter {
 			// === Player ===
 			sr.begin(ShapeRenderer.ShapeType.Filled);
 			sr.setColor(Color.WHITE);
-			sr.rect(0, 0, level.getPlayer().getWidth(), level.getPlayer().getHeight());
 			// TODO -- Render player sprite
 			sr.end();
 
@@ -114,9 +121,9 @@ public class Game extends ApplicationAdapter {
 			WorldManager.doPhysicsStep();
 		}
 	}
-	
+
 	@Override
-	public void dispose () {
+	public void dispose() {
 		mapRenderer.dispose();
 		sr.dispose();
 		batch.dispose();
