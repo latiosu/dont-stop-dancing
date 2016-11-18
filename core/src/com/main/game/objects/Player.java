@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -33,7 +32,7 @@ public class Player extends EntityObject {
 
 		// Register as Box2D rigid body
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.position.set(position.x + width/2f, position.y + height/2f);
+		bodyDef.position.set(position.x + width / 2f, position.y + height / 2f);
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.fixedRotation = true;
 		bodyDef.linearDamping = 10f;
@@ -42,7 +41,7 @@ public class Player extends EntityObject {
 		body.setUserData(this);
 
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(width/2f, height/2f);
+		polygon.setAsBox(width / 2f, height / 2f);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
@@ -68,17 +67,17 @@ public class Player extends EntityObject {
 
 			body.applyLinearImpulse(impulseX,
 					impulseY,
-					position.x + width/2f,
-					position.y + height/2f,
+					position.x + width / 2f,
+					position.y + height / 2f,
 					true);
 		}
-		position = new Vector3(body.getPosition().cpy().sub(width/2f, height/2f), 0);
+		position = new Vector3(body.getPosition().cpy().sub(width / 2f, height / 2f), 0);
 
 		// Fire projectile
 		Direction attackDirection = computeDirection(attackDirections);
 		if (attackDirection != null) { // Only fire if computed direction is different
 			if (lastAttackTime > 0.1f) {
-				bullets.add(new Bullet(position.x + width/2f, position.y + height/2f, 0.3f, 0.3f, 30f, 25f, null, attackDirection));
+				bullets.add(new Bullet(position.x + width / 2f - 0.15f, position.y + height / 2f - 0.15f, 0.3f, 0.3f, 30f, 25f, null, attackDirection));
 				lastAttackTime = 0f;
 			}
 		}
@@ -113,6 +112,7 @@ public class Player extends EntityObject {
 
 	/**
 	 * Computes the cardinal direction of a given boolean array of directions [Up, Down, Left, Right].
+	 *
 	 * @param directions - array of directions
 	 * @return corresponding Direction enum or null if center
 	 */
