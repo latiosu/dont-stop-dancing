@@ -2,7 +2,6 @@ package com.main.game.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,11 +13,13 @@ public class Bullet extends PhysicalObject {
 
 	protected Vector3 start;
 	protected float xVel, yVel, maxDistance;
+	private boolean isAlive;
 
 	public Bullet(float x, float y, float width, float height, float speed, float maxDistance, Texture texture, Direction direction) {
 		super(x, y, width, height, speed, texture);
 		this.start = this.position.cpy();
 		this.maxDistance = maxDistance;
+		this.isAlive = true;
 
 		// Compute xVel and yVel
 		this.xVel = speed * MathUtils.sin(direction.getAngle());
@@ -50,5 +51,13 @@ public class Bullet extends PhysicalObject {
 		// Start moving bullet
 		body.applyLinearImpulse(xVel * Gdx.graphics.getDeltaTime(), yVel * Gdx.graphics.getDeltaTime(), width / 2f, height / 2f, true);
 		position.set(body.getPosition(), 0);
+	}
+
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public void setAlive(boolean alive) {
+		isAlive = alive;
 	}
 }

@@ -3,18 +3,15 @@ package com.main.game.engine;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.main.game.objects.Bullet;
 import com.main.game.objects.Enemy;
@@ -44,6 +41,7 @@ public class Game extends ApplicationAdapter {
 
 		// Load external files
 		assets().load("core/assets/cascoon.png", Texture.class);
+		assets().load("core/assets/silcoon.png", Texture.class);
 		assets().load("core/assets/spheal-down.png", Texture.class);
 		assets().load("core/assets/spheal-left.png", Texture.class);
 		assets().load("core/assets/spheal-right.png", Texture.class);
@@ -129,17 +127,20 @@ public class Game extends ApplicationAdapter {
 			}
 
 			// === Bullets ===
-//			sr.begin(ShapeRenderer.ShapeType.Filled);
-//			sr.setColor(Color.WHITE);
-//			for (Bullet b : level.getPlayer().getBullets()) {
-//				sr.circle(b.getX() - player.getX() + correctX, b.getY() - player.getY() + correctY, b.getWidth()/2f, 20);
-//			}
-//			sr.end();
+			sr.begin(ShapeRenderer.ShapeType.Filled);
+			sr.setColor(Color.SKY);
+			for (Bullet b : level.getPlayer().getBullets()) {
+				sr.circle(b.getBody().getPosition().x - player.getBody().getPosition().x + correctX + player.getWidth() / 2f,
+						b.getBody().getPosition().y - player.getBody().getPosition().y + correctY + player.getHeight() / 2f,
+						b.getWidth() / 2f,
+						20);
+			}
+			sr.end();
 
 			batch.begin();
 			// === Player ===
-			float newWidth = (player.getTexture().getWidth()-3) * UNIT_RATIO;
-			float newHeight = (player.getTexture().getHeight()-3) * UNIT_RATIO;
+			float newWidth = (player.getTexture().getWidth() - 3) * UNIT_RATIO;
+			float newHeight = (player.getTexture().getHeight() - 3) * UNIT_RATIO;
 			batch.draw(player.getTexture(),
 					correctX + player.getRenderOffsetX(),
 					correctY + player.getRenderOffsetY(),
@@ -159,7 +160,7 @@ public class Game extends ApplicationAdapter {
 			mapRenderer.render(foregroundLayers);
 
 			// === Box2D ===
-			WorldManager.getDebugRenderer().render(WorldManager.getWorld(), camera.combined);
+//			WorldManager.getDebugRenderer().render(WorldManager.getWorld(), camera.combined);
 			WorldManager.doPhysicsStep();
 		}
 	}

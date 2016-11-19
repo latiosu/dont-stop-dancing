@@ -69,18 +69,23 @@ public class WorldManager {
 				if (dataB instanceof Enemy) { // Bullet - Enemy
 					// Destroy bullet
 					toRemove.add(contact.getFixtureA().getBody());
+					((Bullet) dataA).setAlive(false);
 
+					// Update enemy
 					Enemy e = (Enemy) dataB;
 					e.setHp(0f);
 				} else if (dataB instanceof String && dataB.equals("Wall")) { // Bullet - Wall
 					// Destroy bullet
 					toRemove.add(contact.getFixtureA().getBody());
+					((Bullet) dataA).setAlive(false);
 				}
 			} else if (dataA instanceof Enemy) {
 				if (dataB instanceof Bullet) { // Enemy - Bullet
 					// Destroy bullet
 					toRemove.add(contact.getFixtureB().getBody());
+					((Bullet) dataB).setAlive(false);
 
+					// Update enemy
 					Enemy e = (Enemy) dataA;
 					e.setHp(0f);
 				} else if (dataB instanceof Player) { // Enemy - Player
@@ -90,15 +95,12 @@ public class WorldManager {
 
 				if (dataB instanceof Bullet) { // Wall - Bullet
 					toRemove.add(contact.getFixtureB().getBody());
-				} else if (dataB instanceof Player) { // Wall - Player
-					// TODO -- Play SFX
+					((Bullet) dataB).setAlive(false);
 				}
 
 			} else if (dataA instanceof Player) {
 				if (dataB instanceof Enemy) { // Player - Enemy
 					// TODO -- Trigger minigame
-				} else if (dataB instanceof String && dataB.equals("Wall")) { // Player - Wall
-					// TODO -- Trigger SFX
 				}
 			}
 

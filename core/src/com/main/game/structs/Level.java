@@ -32,13 +32,15 @@ public class Level {
 	private Player player;
 	private List<Spawner> spawners;
 	private List<Enemy> enemies;
-	private List<Enemy> toRemove;
+	private List<Enemy> deadEnemies;
+	private List<Bullet> deadBullets;
 	private TiledMap map;
 
 	private Level(String levelName) {
 		this.spawners = new ArrayList<>();
 		this.enemies = new ArrayList<>();
-		this.toRemove = new ArrayList<>();
+		this.deadEnemies = new ArrayList<>();
+		this.deadBullets = new ArrayList<>();
 		this.map = new TmxMapLoader().load(levelName); // From internal file storage
 		this.width = map.getProperties().get("width", Integer.class);
 		this.height = map.getProperties().get("height", Integer.class);
@@ -58,20 +60,22 @@ public class Level {
 		for (Enemy e : enemies) {
 			e.update();
 			if (!e.isAlive()) {
-				toRemove.add(e);
+				deadEnemies.add(e);
 			}
 		}
 
-		// Clean up bullets before bodies are emptied
-		for (Body b : WorldManager.getToRemove()) {
-//			System.out.println("Trying to remove a bullet");
-			if (b.getUserData() instanceof Bullet) {
-				player.getBullets().remove(b.getUserData());
-				System.out.println("Removed a bullet");
+		// Bullets
+		for (Bullet b : player.getBullets()) {
+			if (!b.isAlive()) {
+				deadBullets.add(b);
 			}
 		}
-		enemies.removeAll(toRemove);
-		toRemove.clear();
+
+		// Clean up
+		enemies.removeAll(deadEnemies);
+		deadEnemies.clear();
+		player.getBullets().removeAll(deadBullets);
+		deadBullets.clear();
 	}
 
 	private void setupMapObjects() {
