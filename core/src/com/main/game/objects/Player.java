@@ -3,12 +3,13 @@ package com.main.game.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.main.game.engine.Game;
 import com.main.game.engine.WorldManager;
 
 import java.util.ArrayList;
@@ -17,15 +18,17 @@ import java.util.List;
 public class Player extends EntityObject {
 
 	private List<Bullet> bullets;
-	private float lastAttackTime;
+	private float lastAttackTime, renderOffsetX, renderOffsetY;
 	private boolean[] moveDirections; // [Up, Down, Left, Right]
 	private boolean[] attackDirections; // [Up, Down, Left, Right]
 	private boolean isAcceptingInput;
 
-	public Player(float x, float y, float width, float height, float hp, float maxHp, float speed, Sprite sprite) {
-		super(x, y, width, height, hp, maxHp, speed, sprite);
+	public Player(float x, float y, float width, float height, float hp, float maxHp, float speed, Texture texture) {
+		super(x, y, width, height, hp, maxHp, speed, texture);
 		this.bullets = new ArrayList<>();
 		this.lastAttackTime = 0;
+		this.renderOffsetX = 0;
+		this.renderOffsetY = 0;
 		this.moveDirections = new boolean[4];
 		this.attackDirections = new boolean[4];
 		this.isAcceptingInput = true;
@@ -80,7 +83,12 @@ public class Player extends EntityObject {
 				bullets.add(new Bullet(position.x + width / 2f - 0.15f, position.y + height / 2f - 0.15f, 0.3f, 0.3f, 30f, 25f, null, attackDirection));
 				lastAttackTime = 0f;
 			}
+			updateTextureDirection(attackDirection);
+		} else if (newDirection != null) {
+			updateTextureDirection(newDirection);
 		}
+
+		// Update timer
 		lastAttackTime += Gdx.graphics.getDeltaTime();
 	}
 
@@ -101,6 +109,14 @@ public class Player extends EntityObject {
 		}
 	}
 
+	public float getRenderOffsetX() {
+		return renderOffsetX;
+	}
+
+	public float getRenderOffsetY() {
+		return renderOffsetY;
+	}
+
 	public InputAdapter movementAdapter() {
 		return new MovementAdapter();
 	}
@@ -108,6 +124,35 @@ public class Player extends EntityObject {
 	public String toString() {
 		return super.toString() + String.format(", lastAttackTime: %.2f, isAcceptingInput: %s, bullets: %d",
 				lastAttackTime, isAcceptingInput, bullets.size());
+	}
+
+	private void updateTextureDirection(Direction newDirection) {
+		switch (newDirection) {
+			case EAST:
+			case SOUTHEAST:
+				texture = Game.assets().get("core/assets/spheal-right.png", Texture.class);
+				renderOffsetX = -4 * Game.UNIT_RATIO;
+				renderOffsetY = 0;
+				break;
+			case SOUTH:
+			case SOUTHWEST:
+				texture = Game.assets().get("core/assets/spheal-down.png", Texture.class);
+				renderOffsetX = 0;
+				renderOffsetY = 0;
+				break;
+			case WEST:
+			case NORTHWEST:
+				texture = Game.assets().get("core/assets/spheal-left.png", Texture.class);
+				renderOffsetX = 0;
+				renderOffsetY = 0;
+				break;
+			case NORTH:
+			case NORTHEAST:
+			default:
+				texture = Game.assets().get("core/assets/spheal-up.png", Texture.class);
+				renderOffsetX = -1 * Game.UNIT_RATIO;
+				renderOffsetY = -1 * Game.UNIT_RATIO;
+		}
 	}
 
 	/**

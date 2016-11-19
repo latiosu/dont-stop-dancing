@@ -1,6 +1,7 @@
 package com.main.game.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
@@ -14,8 +15,8 @@ public class Bullet extends PhysicalObject {
 	protected Vector3 start;
 	protected float xVel, yVel, maxDistance;
 
-	public Bullet(float x, float y, float width, float height, float speed, float maxDistance, Sprite sprite, Direction direction) {
-		super(x, y, width, height, speed, sprite);
+	public Bullet(float x, float y, float width, float height, float speed, float maxDistance, Texture texture, Direction direction) {
+		super(x, y, width, height, speed, texture);
 		this.start = this.position.cpy();
 		this.maxDistance = maxDistance;
 
@@ -43,11 +44,11 @@ public class Bullet extends PhysicalObject {
 		fixtureDef.restitution = 0.2f;
 		fixtureDef.isSensor = true;
 
-
 		body.createFixture(fixtureDef);
 		shape.dispose();
 
 		// Start moving bullet
 		body.applyLinearImpulse(xVel * Gdx.graphics.getDeltaTime(), yVel * Gdx.graphics.getDeltaTime(), width / 2f, height / 2f, true);
+		position.set(body.getPosition(), 0);
 	}
 }

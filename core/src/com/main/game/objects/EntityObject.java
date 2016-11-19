@@ -1,13 +1,13 @@
 package com.main.game.objects;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Texture;
 
 public abstract class EntityObject extends PhysicalObject {
 
 	protected float hp, maxHp;
 
-	public EntityObject(float x, float y, float width, float height, float hp, float maxHp, float speed, Sprite sprite) {
-		super(x, y, width, height, speed, sprite);
+	public EntityObject(float x, float y, float width, float height, float hp, float maxHp, float speed, Texture texture) {
+		super(x, y, width, height, speed, texture);
 		this.hp = hp;
 		this.maxHp = maxHp;
 	}

@@ -1,6 +1,6 @@
 package com.main.game.objects;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -32,21 +32,21 @@ public abstract class PhysicalObject extends GameObject {
 	}
 
 	protected Direction direction;
-	protected Sprite sprite;
+	protected Texture texture;
 	protected Body body;
 	protected float width, height, speed;
 
-	public PhysicalObject(float x, float y, float width, float height, float speed, Sprite sprite) {
-		this(x, y, width, height, speed, sprite, null);
+	public PhysicalObject(float x, float y, float width, float height, float speed, Texture texture) {
+		this(x, y, width, height, speed, texture, null);
 	}
 
-	public PhysicalObject(float x, float y, float width, float height, float speed, Sprite sprite, Direction direction) {
+	public PhysicalObject(float x, float y, float width, float height, float speed, Texture texture, Direction direction) {
 		super(x, y);
 		this.body = null;
 		this.width = width;
 		this.height = height;
 		this.speed = speed;
-		this.sprite = sprite;
+		this.texture = texture;
 		this.direction = direction;
 	}
 
@@ -70,8 +70,8 @@ public abstract class PhysicalObject extends GameObject {
 		return speed;
 	}
 
-	public Sprite getSprite() {
-		return sprite;
+	public Texture getTexture() {
+		return texture;
 	}
 
 	public Direction getDirection() {
@@ -91,7 +91,7 @@ public abstract class PhysicalObject extends GameObject {
 	}
 
 	public String toString() {
-		return super.toString() + String.format(", width: %.2f, height: %.2f, speed: %.2f, sprite: %s, direction: %s",
-				width, height, speed, sprite, direction);
+		return super.toString() + String.format(", width: %.2f, height: %.2f, speed: %.2f, texture: %s, direction: %s",
+				width, height, speed, texture, direction);
 	}
 }

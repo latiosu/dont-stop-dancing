@@ -1,7 +1,8 @@
 package com.main.game.objects;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -12,8 +13,8 @@ public class Enemy extends EntityObject {
 	private Player player;
 	private boolean isAlert;
 
-	public Enemy(float x, float y, float width, float height, float hp, float maxHp, float speed, Sprite sprite, Player player) {
-		super(x, y, width, height, hp, maxHp, speed, sprite);
+	public Enemy(float x, float y, float width, float height, float hp, float maxHp, float speed, Texture texture, Player player) {
+		super(x, y, width, height, hp, maxHp, speed, texture);
 		this.player = player;
 		this.isAlert = false;
 
@@ -48,6 +49,6 @@ public class Enemy extends EntityObject {
 		Vector2 targetDirection = new Vector2(dirX, dirY).nor().scl(speed);
 
 		body.setLinearVelocity(targetDirection);
-		position.set(body.getPosition(), 0);
+		position = new Vector3(body.getPosition().cpy().sub(width / 2f, height / 2f), 0);
 	}
 }

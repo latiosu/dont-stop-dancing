@@ -3,12 +3,18 @@ package com.main.game.engine;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.main.game.objects.Bullet;
 import com.main.game.objects.Enemy;
@@ -18,6 +24,7 @@ import com.main.game.structs.Level;
 public class Game extends ApplicationAdapter {
 
 	public final static float UNIT_RATIO = 1 / 16f; // 1 unit = 16 px
+	private static AssetManager assets = null;
 
 	OrthogonalTiledMapRenderer mapRenderer;
 	OrthographicCamera camera;
@@ -35,6 +42,12 @@ public class Game extends ApplicationAdapter {
 		Box2D.init();
 
 		// Load external files
+		assets().load("core/assets/cascoon.png", Texture.class);
+		assets().load("core/assets/spheal-down.png", Texture.class);
+		assets().load("core/assets/spheal-left.png", Texture.class);
+		assets().load("core/assets/spheal-right.png", Texture.class);
+		assets().load("core/assets/spheal-up.png", Texture.class);
+		assets().finishLoading();
 		level = Level.loadFromFile("core/assets/basic.tmx");
 
 		// Setup rendering tools
@@ -49,6 +62,7 @@ public class Game extends ApplicationAdapter {
 		sr.setProjectionMatrix(camera.combined);
 		mapRenderer.setView(camera);
 		batch = new SpriteBatch();
+		batch.setProjectionMatrix(camera.combined);
 
 		// Rendering layers
 		backgroundLayers = new int[]{0, 1, 2, 3, 4};
@@ -94,19 +108,7 @@ public class Game extends ApplicationAdapter {
 
 			mapRenderer.render(backgroundLayers);
 
-			// === Bullets ===
-			sr.begin(ShapeRenderer.ShapeType.Filled);
-			sr.setColor(Color.ORANGE);
-			for (Bullet b : level.getPlayer().getBullets()) {
-				// TODO -- Render bullet sprite
-			}
-			sr.end();
-
-			// === Player ===
-			sr.begin(ShapeRenderer.ShapeType.Filled);
-			sr.setColor(Color.WHITE);
-
-			// Render sprite only as camera is fixed
+			// Determine offset player position
 			float correctX = 0;
 			float correctY = 0;
 			if (camera.position.x <= camera.viewportWidth / 2f) {
@@ -119,18 +121,34 @@ public class Game extends ApplicationAdapter {
 			} else if (camera.position.y >= level.getHeight() - camera.viewportHeight / 2f) {
 				correctY = player.getY() - (level.getHeight() - camera.viewportHeight / 2f);
 			}
-			sr.rect(correctX, correctY, player.getWidth(), player.getHeight());
-			// TODO -- Render player sprite
-			sr.end();
 
+			// === Bullets ===
+//			sr.begin(ShapeRenderer.ShapeType.Filled);
+//			sr.setColor(Color.WHITE);
+//			for (Bullet b : level.getPlayer().getBullets()) {
+//				sr.circle(b.getX() - player.getX() + correctX, b.getY() - player.getY() + correctY, b.getWidth()/2f, 20);
+//			}
+//			sr.end();
+
+			batch.begin();
+			// === Player ===
+			float newWidth = (player.getTexture().getWidth()-3) * UNIT_RATIO;
+			float newHeight = (player.getTexture().getHeight()-3) * UNIT_RATIO;
+			batch.draw(player.getTexture(),
+					correctX + player.getRenderOffsetX(),
+					correctY + player.getRenderOffsetY(),
+					newWidth,
+					newHeight);
 
 			// === Enemies ===
-			sr.begin(ShapeRenderer.ShapeType.Filled);
-			sr.setColor(Color.ORANGE);
 			for (Enemy e : level.getEnemies()) {
-				sr.circle(e.getX() - player.getX() + correctX, e.getY() - player.getY() + correctY, e.getWidth()/2f, 20);
+				batch.draw(e.getTexture(),
+						e.getBody().getPosition().x - player.getBody().getPosition().x + correctX,
+						e.getBody().getPosition().y - player.getBody().getPosition().y + correctY,
+						e.getWidth(),
+						e.getHeight());
 			}
-			sr.end();
+			batch.end();
 
 			mapRenderer.render(foregroundLayers);
 
@@ -146,5 +164,12 @@ public class Game extends ApplicationAdapter {
 		sr.dispose();
 		batch.dispose();
 		WorldManager.getWorld().dispose();
+	}
+
+	public static AssetManager assets() {
+		if (assets == null) {
+			assets = new AssetManager();
+		}
+		return assets;
 	}
 }

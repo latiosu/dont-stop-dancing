@@ -1,5 +1,6 @@
 package com.main.game.structs;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.main.game.engine.Game;
 import com.main.game.engine.WorldManager;
+import com.main.game.objects.Bullet;
 import com.main.game.objects.Enemy;
 import com.main.game.objects.Player;
 import com.main.game.objects.Spawner;
@@ -57,6 +59,15 @@ public class Level {
 			e.update();
 			if (!e.isAlive()) {
 				toRemove.add(e);
+			}
+		}
+
+		// Clean up bullets before bodies are emptied
+		for (Body b : WorldManager.getToRemove()) {
+//			System.out.println("Trying to remove a bullet");
+			if (b.getUserData() instanceof Bullet) {
+				player.getBullets().remove(b.getUserData());
+				System.out.println("Removed a bullet");
 			}
 		}
 		enemies.removeAll(toRemove);
@@ -152,7 +163,7 @@ public class Level {
 								100f,
 								100f,
 								40f,
-								null);
+								Game.assets().get("core/assets/spheal-down.png", Texture.class));
 					}
 				}
 			}
