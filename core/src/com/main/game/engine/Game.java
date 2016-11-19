@@ -31,6 +31,7 @@ public class Game extends ApplicationAdapter {
 	ShapeRenderer sr;
 	SpriteBatch batch;
 	Level level;
+	Music bgm;
 
 	int[] foregroundLayers, backgroundLayers;
 
@@ -47,6 +48,7 @@ public class Game extends ApplicationAdapter {
 		assets().load("core/assets/spheal-left.png", Texture.class);
 		assets().load("core/assets/spheal-right.png", Texture.class);
 		assets().load("core/assets/spheal-up.png", Texture.class);
+		assets().load("core/assets/cyborg-ninja.mp3", Music.class);
 		assets().finishLoading();
 		level = Level.loadFromFile("core/assets/basic.tmx");
 
@@ -77,6 +79,10 @@ public class Game extends ApplicationAdapter {
 
 		// Start in-game
 		isPlaying = true;
+		bgm = assets().get("core/assets/cyborg-ninja.mp3", Music.class);
+		bgm.setLooping(true);
+		bgm.setVolume(0.5f);
+		bgm.play();
 	}
 
 	@Override
