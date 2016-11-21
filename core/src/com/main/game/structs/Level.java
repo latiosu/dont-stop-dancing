@@ -103,6 +103,7 @@ public class Level {
 						FixtureDef fixtureDef = new FixtureDef();
 						fixtureDef.shape = polygon;
 						fixtureDef.density = 0f;
+						fixtureDef.friction = 0f;
 
 						body.createFixture(fixtureDef);
 						polygon.dispose();
@@ -124,6 +125,7 @@ public class Level {
 						FixtureDef fixtureDef = new FixtureDef();
 						fixtureDef.shape = polygon;
 						fixtureDef.density = 0f;
+						fixtureDef.friction = 0f;
 
 						body.createFixture(fixtureDef);
 						polygon.dispose();
@@ -148,6 +150,7 @@ public class Level {
 						FixtureDef fixtureDef = new FixtureDef();
 						fixtureDef.shape = shape;
 						fixtureDef.density = 0f;
+						fixtureDef.friction = 0f;
 
 						body.createFixture(fixtureDef);
 						shape.dispose();
