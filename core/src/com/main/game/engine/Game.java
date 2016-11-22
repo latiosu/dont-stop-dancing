@@ -40,6 +40,8 @@ public class Game extends ApplicationAdapter {
 		Box2D.init();
 
 		// Load external files
+		assets().load("core/assets/fox-sprites.png", Texture.class);
+		assets().load("core/assets/fox-attacks.png", Texture.class);
 		assets().load("core/assets/cascoon.png", Texture.class);
 		assets().load("core/assets/silcoon.png", Texture.class);
 		assets().load("core/assets/spheal-down.png", Texture.class);
@@ -126,26 +128,23 @@ public class Game extends ApplicationAdapter {
 				correctY = player.getY() - (level.getHeight() - camera.viewportHeight / 2f);
 			}
 
-			// === Bullets ===
-			sr.begin(ShapeRenderer.ShapeType.Filled);
-			sr.setColor(Color.SKY);
-			for (Bullet b : level.getPlayer().getBullets()) {
-				sr.circle(b.getBody().getPosition().x - player.getBody().getPosition().x + correctX + player.getWidth() / 2f,
-						b.getBody().getPosition().y - player.getBody().getPosition().y + correctY + player.getHeight() / 2f,
-						b.getWidth() / 2f,
-						20);
-			}
-			sr.end();
-
 			batch.begin();
+			// === Bullets ===
+			// TODO -- FIX
+			for (Bullet b : level.getPlayer().getBullets()) {
+				batch.draw(b.getAnimationFrame(),
+						b.getBody().getPosition().x - player.getBody().getPosition().x + correctX,
+						b.getBody().getPosition().y - player.getBody().getPosition().y + correctY,
+						0.7f,
+						0.7f);
+			}
+
 			// === Player ===
-			float newWidth = (player.getTexture().getWidth() - 3) * UNIT_RATIO;
-			float newHeight = (player.getTexture().getHeight() - 3) * UNIT_RATIO;
-			batch.draw(player.getTexture(),
-					correctX + player.getRenderOffsetX(),
-					correctY + player.getRenderOffsetY(),
-					newWidth,
-					newHeight);
+			batch.draw(player.getAnimationFrame(),
+					correctX,
+					correctY,
+					player.getWidth(),
+					player.getHeight());
 
 			// === Enemies ===
 			for (Enemy e : level.getEnemies()) {

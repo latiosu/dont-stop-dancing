@@ -2,11 +2,14 @@ package com.main.game.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.main.game.engine.Game;
 import com.main.game.engine.WorldManager;
 
 public class Bullet extends PhysicalObject {
@@ -51,6 +54,21 @@ public class Bullet extends PhysicalObject {
 		// Start moving bullet
 		body.applyLinearImpulse(xVel * Gdx.graphics.getDeltaTime(), yVel * Gdx.graphics.getDeltaTime(), width / 2f, height / 2f, true);
 		position.set(body.getPosition(), 0);
+
+		// Extract animations
+		TextureRegion[][] tmp = TextureRegion.split(Game.assets().get("core/assets/fox-attacks.png", Texture.class), 7, 7);
+		animations = new Animation[1];
+		animations[0] = new Animation(0.2f, tmp[0][0], tmp[0][1]);
+		currentFrame = animations[0].getKeyFrame(stateTime);
+	}
+
+	public void update() {
+		stateTime = (stateTime + Gdx.graphics.getDeltaTime()) % animations[0].getAnimationDuration();
+	}
+
+	@Override
+	public TextureRegion getAnimationFrame() {
+		return animations[0].getKeyFrame(stateTime);
 	}
 
 	public boolean isAlive() {

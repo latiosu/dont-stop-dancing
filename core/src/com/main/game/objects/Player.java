@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -54,6 +56,15 @@ public class Player extends EntityObject {
 
 		body.createFixture(fixtureDef);
 		polygon.dispose();
+
+		// Extract animations
+		animations = new Animation[4]; // [Up, Down, Left, Right]
+		TextureRegion[][] tmp = TextureRegion.split(Game.assets().get("core/assets/fox-sprites.png", Texture.class), 17, 17);
+		animations[0] = new Animation(0.2f, tmp[0][2], tmp[0][3]); // Up
+		animations[1] = new Animation(0.2f, tmp[0][0], tmp[0][1]); // Down
+		animations[2] = new Animation(0.2f, tmp[1][0], tmp[1][1]); // Left
+		animations[3] = new Animation(0.2f, tmp[1][2], tmp[1][3]); // Right
+		currentFrame = animations[1].getKeyFrame(stateTime);
 	}
 
 	/**
@@ -90,6 +101,12 @@ public class Player extends EntityObject {
 
 		// Update timer
 		lastAttackTime += Gdx.graphics.getDeltaTime();
+		stateTime = (stateTime + Gdx.graphics.getDeltaTime()) % animations[0].getAnimationDuration();
+	}
+
+	@Override
+	public TextureRegion getAnimationFrame() {
+		return currentFrame;
 	}
 
 	public List<Bullet> getBullets() {
@@ -130,28 +147,20 @@ public class Player extends EntityObject {
 		switch (newDirection) {
 			case EAST:
 			case SOUTHEAST:
-				texture = Game.assets().get("core/assets/spheal-right.png", Texture.class);
-				renderOffsetX = -4 * Game.UNIT_RATIO;
-				renderOffsetY = 0;
+				currentFrame = animations[3].getKeyFrame(stateTime);
 				break;
 			case SOUTH:
 			case SOUTHWEST:
-				texture = Game.assets().get("core/assets/spheal-down.png", Texture.class);
-				renderOffsetX = 0;
-				renderOffsetY = 0;
+				currentFrame = animations[1].getKeyFrame(stateTime);
 				break;
 			case WEST:
 			case NORTHWEST:
-				texture = Game.assets().get("core/assets/spheal-left.png", Texture.class);
-				renderOffsetX = 0;
-				renderOffsetY = 0;
+				currentFrame = animations[2].getKeyFrame(stateTime);
 				break;
 			case NORTH:
 			case NORTHEAST:
 			default:
-				texture = Game.assets().get("core/assets/spheal-up.png", Texture.class);
-				renderOffsetX = -1 * Game.UNIT_RATIO;
-				renderOffsetY = -1 * Game.UNIT_RATIO;
+				currentFrame = animations[0].getKeyFrame(stateTime);
 		}
 	}
 

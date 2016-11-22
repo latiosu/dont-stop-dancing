@@ -1,6 +1,8 @@
 package com.main.game.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -50,5 +52,12 @@ public class Enemy extends EntityObject {
 
 		body.setLinearVelocity(targetDirection);
 		position = new Vector3(body.getPosition().cpy().sub(width / 2f, height / 2f), 0);
+
+		stateTime += Gdx.graphics.getDeltaTime();
+	}
+
+	@Override
+	public TextureRegion getAnimationFrame() {
+		return null;
 	}
 }

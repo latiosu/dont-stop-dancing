@@ -1,6 +1,8 @@
 package com.main.game.objects;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -32,9 +34,11 @@ public abstract class PhysicalObject extends GameObject {
 	}
 
 	protected Direction direction;
+	protected Animation[] animations;
+	protected TextureRegion currentFrame;
 	protected Texture texture;
 	protected Body body;
-	protected float width, height, speed;
+	protected float width, height, speed, stateTime;
 
 	public PhysicalObject(float x, float y, float width, float height, float speed, Texture texture) {
 		this(x, y, width, height, speed, texture, null);
@@ -48,7 +52,12 @@ public abstract class PhysicalObject extends GameObject {
 		this.speed = speed;
 		this.texture = texture;
 		this.direction = direction;
+		this.animations = null;
+		this.currentFrame = null;
+		this.stateTime = 0f;
 	}
+
+	public abstract TextureRegion getAnimationFrame();
 
 	public Body getBody() {
 		return body;

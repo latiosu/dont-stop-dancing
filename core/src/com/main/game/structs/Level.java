@@ -66,6 +66,7 @@ public class Level {
 
 		// Bullets
 		for (Bullet b : player.getBullets()) {
+			b.update();
 			if (!b.isAlive()) {
 				deadBullets.add(b);
 			}
