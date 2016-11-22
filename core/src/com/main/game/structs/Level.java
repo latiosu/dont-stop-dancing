@@ -171,7 +171,7 @@ public class Level {
 								100f,
 								100f,
 								40f,
-								Game.assets().get("core/assets/spheal-down.png", Texture.class));
+								null);
 					}
 				}
 			}

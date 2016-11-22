@@ -44,11 +44,8 @@ public class Game extends ApplicationAdapter {
 		assets().load("core/assets/fox-attacks.png", Texture.class);
 		assets().load("core/assets/cascoon.png", Texture.class);
 		assets().load("core/assets/silcoon.png", Texture.class);
-		assets().load("core/assets/spheal-down.png", Texture.class);
-		assets().load("core/assets/spheal-left.png", Texture.class);
-		assets().load("core/assets/spheal-right.png", Texture.class);
-		assets().load("core/assets/spheal-up.png", Texture.class);
 		assets().load("core/assets/cyborg-ninja.mp3", Music.class);
+		assets().load("core/assets/ice-flow.mp3", Music.class);
 		assets().finishLoading();
 		level = Level.loadFromFile("core/assets/basic.tmx");
 
@@ -79,7 +76,8 @@ public class Game extends ApplicationAdapter {
 
 		// Start in-game
 		isPlaying = true;
-		bgm = assets().get("core/assets/cyborg-ninja.mp3", Music.class);
+		String randomBgm = Math.random() < 0.5 ? "core/assets/cyborg-ninja.mp3" : "core/assets/ice-flow.mp3";
+		bgm = assets().get(randomBgm, Music.class);
 		bgm.setLooping(true);
 		bgm.setVolume(0.5f);
 		bgm.play();
